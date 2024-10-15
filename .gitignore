@@ -1,0 +1,23 @@
+node_modules
+.env
+
+# Hardhat files
+/cache
+/artifacts
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
+
+# Hardhat Ignition default folder for deployments against a local node
+ignition/deployments/chain-31337
+
+
+
+PRIVATE_KEY=0xaD8e98F3a4e62239b134216f7671BF1df7ab2Ba0
+ZKEVM_RPC_URL=https://rpc.public.zkevm-test.net
+
