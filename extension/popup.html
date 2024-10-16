@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blockchain Comment System</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Include Web3Modal and ethers.js -->
+  <script src="web3modal.min.js"></script>
+  <script src="ethers.min.js"></script>
+  
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <h2>Blockchain Comment System</h2>
+
+  <!-- Connect Wallet Button -->
+  <div id="walletInfo">
+    <button id="connectWallet">Connect Wallet</button>
+  </div>
+
+  <!-- Comment Section -->
+  <div id="commentSection" style="display: none;">Loading comments...</div>
+
+  <!-- Comment Input Section -->
+  <div id="commentInputSection" style="display: none;">
+    <textarea id="newComment" placeholder="Write a comment..."></textarea>
+    <button id="submitComment">Submit Comment</button>
+  </div>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,55 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 10px;
+}
+
+#walletInfo {
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+#commentSection {
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 60px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.comment {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.comment button {
+  margin-right: 5px;
+}
+
+#connectWallet {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+  
+  
