@@ -19,40 +19,45 @@ function _connectWallet() {
           console.log('Attempting to connect wallet...');
 
           // Fetch the pairing URI from the backend
-          _context.next = 4;
+          console.log('Fetching pairing URI from the backend...');
+          _context.next = 5;
           return fetch('http://localhost:3000/pairing-uri');
-        case 4:
+        case 5:
           response = _context.sent;
-          _context.next = 7;
+          if (response.ok) {
+            _context.next = 9;
+            break;
+          }
+          console.error("Failed to fetch pairing URI. Status: ".concat(response.status));
+          return _context.abrupt("return");
+        case 9:
+          _context.next = 11;
           return response.json();
-        case 7:
+        case 11:
           data = _context.sent;
-          pairingUri = data.uri;
+          // Parse the response as JSON
+          pairingUri = data.uri; // Extract the URI
           console.log("Received pairing URI: ".concat(pairingUri));
 
           // Detect if the user has a wallet installed (e.g., MetaMask)
           if (!window.ethereum) {
-            _context.next = 20;
+            _context.next = 24;
             break;
           }
           console.log('Wallet detected! Attempting direct connection...');
-          // Requesting access to Ethereum accounts from the user's wallet (like MetaMask)
-          _context.next = 14;
+          _context.next = 18;
           return window.ethereum.request({
             method: 'eth_requestAccounts'
           });
-        case 14:
+        case 18:
           accounts = _context.sent;
           console.log("Connected wallet address: ".concat(accounts[0]));
-          // Display the connected wallet's address in the UI
           document.getElementById('walletInfo').innerHTML = "Connected: <strong>".concat(accounts[0], "</strong>");
-          document.getElementById('qrcode').style.display = 'none'; // Hide the QR code if wallet is connected directly
-          _context.next = 24;
+          document.getElementById('qrcode').style.display = 'none'; // Hide QR code if wallet is connected
+          _context.next = 28;
           break;
-        case 20:
+        case 24:
           console.log('No wallet detected, displaying QR code...');
-
-          // If no wallet is detected, generate and display the QR code for the pairing URI
           qrcodeDiv = document.getElementById('qrcode');
           qrcodeDiv.innerHTML = ''; // Clear previous QR code if any
           qrCode = new QRCode(qrcodeDiv, {
@@ -60,25 +65,23 @@ function _connectWallet() {
             width: 300,
             height: 300
           });
-        case 24:
-          _context.next = 29;
+        case 28:
+          _context.next = 33;
           break;
-        case 26:
-          _context.prev = 26;
+        case 30:
+          _context.prev = 30;
           _context.t0 = _context["catch"](0);
           console.error('Error connecting wallet:', _context.t0);
-        case 29:
+        case 33:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 26]]);
+    }, _callee, null, [[0, 30]]);
   }));
   return _connectWallet.apply(this, arguments);
 }
 window.onload = function () {
   console.log('Page loaded. Setting up event listeners.');
-
-  // Find the "Connect Wallet" button and set up an event listener for it
   var connectWalletButton = document.getElementById('connectWallet');
   if (connectWalletButton) {
     connectWalletButton.addEventListener('click', connectWallet);
