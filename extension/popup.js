@@ -1,51 +1,63 @@
-import { Core } from '@walletconnect/core';
-import { WalletKit } from '@reown/walletkit';
-
-// Initialize Core with your WalletConnect Project ID from .env
-const core = new Core({
-  projectId: process.env.WALLET_CONNECT_PROJECT_ID, // Loaded from .env file using dotenv-webpack
-});
-
-// Metadata for your application
-const metadata = {
-  name: 'Blockchain Comment System',
-  description: 'Decentralized comment system for websites',
-  url: 'https://localhost', // Set as localhost for development or replace with your domain if hosted
-  icons: ['images/BlockchainCommentIcon_128x128.png'], // Local icon image for the extension
-};
-
-// Initialize WalletKit
-async function initWalletKit() {
-  try {
-    const walletKit = await WalletKit.init({
-      core, // Pass the core instance
-      metadata,
-    });
-    console.log('WalletKit initialized successfully:', walletKit);
-    return walletKit;
-  } catch (error) {
-    console.error('Error initializing WalletKit:', error);
-  }
-}
-
-// Connect to the wallet
 async function connectWallet() {
-  const walletKit = await initWalletKit();
-  if (walletKit) {
-    try {
-      const walletConnection = await walletKit.connect(); // Initiates wallet connection
-      console.log('Wallet connected:', walletConnection);
-      document.getElementById('walletInfo').innerHTML = `Connected: <strong>${walletConnection.accounts[0].address}</strong>`;
-    } catch (error) {
-      console.error('Error connecting wallet:', error);
+  try {
+    console.log('Attempting to connect wallet...');
+    
+    // Fetch the pairing URI from the backend
+    const response = await fetch('http://localhost:3000/pairing-uri');
+    const data = await response.json();
+    
+    const pairingUri = data.uri;
+    console.log(`Received pairing URI: ${pairingUri}`);
+
+    // Detect if the user has a wallet installed (e.g., MetaMask)
+    if (window.ethereum) {
+      console.log('Wallet detected! Attempting direct connection...');
+      // Requesting access to Ethereum accounts from the user's wallet (like MetaMask)
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      console.log(`Connected wallet address: ${accounts[0]}`);
+      // Display the connected wallet's address in the UI
+      document.getElementById('walletInfo').innerHTML = `Connected: <strong>${accounts[0]}</strong>`;
+      document.getElementById('qrcode').style.display = 'none'; // Hide the QR code if wallet is connected directly
+    } else {
+      console.log('No wallet detected, displaying QR code...');
+      
+      // If no wallet is detected, generate and display the QR code for the pairing URI
+      const qrcodeDiv = document.getElementById('qrcode');
+      qrcodeDiv.innerHTML = ''; // Clear previous QR code if any
+      const qrCode = new QRCode(qrcodeDiv, {
+        text: pairingUri,
+        width: 300,
+        height: 300
+      });
     }
+  } catch (error) {
+    console.error('Error connecting wallet:', error);
   }
 }
 
-// Event listener for the Connect Wallet button
 window.onload = function () {
-  document.getElementById('connectWallet').addEventListener('click', connectWallet);
+  console.log('Page loaded. Setting up event listeners.');
+  
+  // Find the "Connect Wallet" button and set up an event listener for it
+  const connectWalletButton = document.getElementById('connectWallet');
+  if (connectWalletButton) {
+    connectWalletButton.addEventListener('click', connectWallet);
+    console.log('Connect Wallet button event listener added.');
+  } else {
+    console.error('Connect Wallet button not found.');
+  }
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
 
